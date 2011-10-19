@@ -11,10 +11,15 @@
 #import "SDWebImageRootViewController.h"
 #import "FlickrRootViewController.h"
 
+#import "KTPhotoScrollViewController.h"
+#import "SDWebImageDataSource.h"
+#import "JEPhotoScrollViewController.h"
 
 #define LOCAL_IMAGE_SAMPLE 0
 #define FLICKR_SAMPLE 1
 #define SDWEBIMAGE_SAMPLE 2
+
+#define GE_N_ADDITION1_SAMPLE 3
 
 @implementation RootViewController
 
@@ -89,7 +94,14 @@
    [newController release];
 }
 
-
+- (void)showJEPhotoScrollVC
+{
+    SDWebImageDataSource *datasource = [[SDWebImageDataSource alloc] init];
+    
+    JEPhotoScrollViewController *scroll = [[JEPhotoScrollViewController alloc] initWithDataSource:datasource andStartWithPhotoAtIndex:0 fullScreen:YES];
+    
+    [self.navigationController pushViewController:scroll animated:YES];
+}
 
 #pragma mark -
 #pragma mark TableView Events
@@ -102,7 +114,7 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section 
 {
-   return 3;
+   return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
@@ -119,18 +131,23 @@
    }
 
    switch ([indexPath row]) {
-      case LOCAL_IMAGE_SAMPLE:
+       case LOCAL_IMAGE_SAMPLE:
          [[cell textLabel] setText:@"Local Image Sample"];
          [[cell detailTextLabel] setText:@"Images stored locally, with add/remove."];
          break;
-      case SDWEBIMAGE_SAMPLE:
+       case SDWEBIMAGE_SAMPLE:
          [[cell textLabel] setText:@"SDWebImage Sample"];
          [[cell detailTextLabel] setText:@"Web images, asynchronous with cache."];
          break;
-      case FLICKR_SAMPLE:
+       case FLICKR_SAMPLE:
          [[cell textLabel] setText:@"Flickr Sample"];
          [[cell detailTextLabel] setText:@"Web images, synchronous with cache."];
          break;
+    
+       case GE_N_ADDITION1_SAMPLE: {
+           cell.textLabel.text = @"JEPhotoScrollingViewController";
+           cell.detailTextLabel.text = @"PhotoScrollVC with thum list button on top-right.";
+       }
    }
    
    return cell;
@@ -148,6 +165,11 @@
       case FLICKR_SAMPLE:
          [self showFlickrSample];
          break;
+           
+       case GE_N_ADDITION1_SAMPLE: {
+           [self showJEPhotoScrollVC];
+           break;
+       }
    }
    [tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES]; 
 }
